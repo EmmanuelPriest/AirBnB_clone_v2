@@ -9,7 +9,7 @@ import models
 import shlex
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """Defines State class that inherits from BaseModel and Base classes"""
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
