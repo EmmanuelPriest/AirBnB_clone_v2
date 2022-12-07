@@ -25,7 +25,7 @@ class FileStorage:
     def all(self, cls=None):
         """
         returns a dictionary
-        
+
         Return:
             returns a dictionary of __object
         """
@@ -44,7 +44,7 @@ class FileStorage:
     def new(self, obj):
         """
         sets __object to given obj
-        
+
         Args:
             obj: given object
         """
