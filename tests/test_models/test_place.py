@@ -1,93 +1,70 @@
 #!/usr/bin/python3
 
-"""Tests for Place """
+""" """
 from tests.test_models.test_base_model import test_basemodel
 from models.place import Place
-import os
 
 
 class test_Place(test_basemodel):
-    """ test class Place"""
+    """ """
 
     def __init__(self, *args, **kwargs):
-        """initializing tests """
+        """ """
         super().__init__(*args, **kwargs)
         self.name = "Place"
         self.value = Place
 
     def test_city_id(self):
-        """ testing Place city_id"""
+        """ """
         new = self.value()
-        self.assertEqual(type(new.city_id), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.city_id), str)
 
     def test_user_id(self):
-        """testing Place user_id """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.user_id), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.user_id), str)
 
     def test_name(self):
-        """ Testing Place name"""
+        """ """
         new = self.value()
-        self.assertEqual(type(new.name), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.name), str)
 
     def test_description(self):
-        """testing Place description """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.description), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.description), str)
 
     def test_number_rooms(self):
-        """Testin number of rooms in Place """
+        """ """
         new = self.value()
-         self.assertEqual(type(new.number_rooms), int if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.number_rooms), int)
 
     def test_number_bathrooms(self):
-        """Testing number of bathrooms in Place """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.number_bathrooms), int if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.number_bathrooms), int)
 
     def test_max_guest(self):
-        """Testing max guest in Place """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.max_guest), int if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.max_guest), int)
 
     def test_price_by_night(self):
-        """Testing Place price per night """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.price_by_night), int if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.price_by_night), int)
 
     def test_latitude(self):
-        """Testing Place latitude """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.latitude), float if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.latitude), float)
 
     def test_longitude(self):
-        """Testing Place longitude """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.latitude), float if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.latitude), float)
 
     def test_amenity_ids(self):
-        """Testing Place amenity_id """
+        """ """
         new = self.value()
-        self.assertEqual(type(new.amenity_ids), list if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.amenity_ids), list)
