@@ -3,6 +3,7 @@
 """Defines the class DBStorage"""
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from models.amenity import Amenity
 from models.base_model import Base
 from models.city import City
@@ -12,12 +13,6 @@ from models.state import State
 from models.user import User
 from os import getenv
 
-if getenv("HBNB_TYPE_STORAGE") == "db":
-    from models.place import place_amenity
-
-classes = {"User": User, "State": State, "City": City, "Amenity": Amenity,
-           "Place": Place, "Review": Review}
-
 
 class DBStorage:
     """Defines new engine class DBStorage"""
@@ -25,20 +20,17 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        """Initializes the engine class DBStorage"""
-        HBNB_MYSQL_USER = getenv("HBNB_MYSQL_USER")
-        HBNB_MYSQL_PWD = getenv("HBNB_MYSQL_PWD")
-        HBNB_MYSQL_HOST = getenv("HBNB_MYSQL_HOST")
-        HBNB_MYSQL_DB = getenv("HBNB_MYSQL_DB")
-        HBNB_ENV = getenv("HBNB_ENV")
+        """Initializes the engine class DBStorage environ tables"""
+        user = getenv("HBNB_MYSQL_USER")
+        passwd = getenv("HBNB_MYSQL_PWD")
+        db = getenv("HBNB_MYSQL_DB")
+        host = getenv("HBNB_MYSQL_HOST")
+        env = getenv("HBNB_ENV")
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
-                                      format(HBNB_MYSQL_USER,
-                                             HBNB_MYSQL_PWD,
-                                             HBNB_MYSQL_HOST,
-                                             HBNB_MYSQL_DB),
+                                      format(user, passwd, host, db),
                                       pool_pre_ping=True)
 
-        if HBNB_ENV == "test":
+        if env == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -46,29 +38,25 @@ class DBStorage:
         depending of the class name
         """
         dictionary = {}
-        if cls is None:
-            for all_obj in classes.value():
-                all_objects = self.__session.query(all_obj).all()
-                for object in all_objects:
-                    key = object.__class__.__name__ + "." + object.id
-                    dictionary[key] = object
+        if cls:
+            if type(cls) is str:
+                cls = eval(cls)
+            query = self.__session.query(cls)
+            for elem in query:
+                key = "{}.{}".format(type(elem).__name__, elem.id)
+                dictionary[key] = elem
         else:
-            all_objects = self.__session.query(cls).all()
-            for object in all_objects:
-                key = object.__class__.__name__ + "." + object.id
-                dictionary[key] = object
+            lista = [State, City, User, Place, Review, Amenity]
+            for clase in lista:
+                query = self.__session.query(clase)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    dictionary[key] = elem
         return dictionary
 
     def new(self, obj):
         """add the object to the current database session"""
-        if obj is not None:
-            try:
-                self.__session.add(obj)
-                self.__session.flush()
-                self.__session.refresh(obj)
-            except Exception as exp:
-                self.__session.rollback()
-                raise exp
+        self.__session.add(obj)
 
     def save(self):
         """commit all changes of the current database session"""
@@ -76,15 +64,15 @@ class DBStorage:
 
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
-        if obj is not None:
-            self.__session.query(type(obj)).filter(type(obj).id == obj.id).
-            delete()
+        if obj:
+            self.session.delete(obj)
 
     def reload(self):
         """create all tables in the database"""
         Base.metadata.create_all(self.__engine)
         create_sess = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(create_sess)()
+        Session = scoped_session(create_sess)
+        self.__session = Session()
 
     def close(self):
         """closes the sqlalchemy working session"""
