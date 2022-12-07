@@ -115,44 +115,24 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        try:
+            if not args:
+                raise SyntaxError()
+            arg_list = args.split(" ")
+            kw = {}
+            for arg in arg_list[1:]:
+                arg_splited = arg.split("=")
+                arg_splited[1] = eval(arg_splited[1])
+                if type(arg_splited[1]) is str:
+                    arg_splited[1] = arg_splited[1].replace("_", " ").replace('"', '\\"')
+                kw[arg_splited[0]] = arg_splited[1]
+        except SyntaxError:
             print("** class name missing **")
-            return
-        # check for params in args
-        params_dict = {}
-        if "=" in args and " " in args:
-            args = args.partition(" ")
-            cls_name = args[0]
-            parameters = args[2].split(" ")
-
-            # converting params into dict
-            for item in parameters:
-                params_key, params_value = tuple(item.split("="))
-                if params_value[0] == '"':
-                    params_value = params_value.strip('"').replace("_", " ")
-                else:
-                    try:
-                        params_value = eval(params_value)
-                    except (SyntaxError, NameError):
-                        continue
-
-                params_dict[params_key] = params_value
-        else:
-            cls_name = args
-
-        if cls_name not in HBNBCommand.classes:
+        except NameError:
             print("** class doesn't exist **")
-            return
-
-        new_instance = HBNBCommand.classes[cls_name]()
-        storage.save()
+        new_instance = HBNBCommand.classes[arg_list[0]](**kw)
+        new_instance.save()
         print(new_instance.id)
-
-        if len(params_dict) > 0:
-            args = "{} {} {}".format(cls_name, new_instance.id, params_dict)
-            # updating args
-            self.do_update(args)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -234,11 +214,10 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            for k, v in storage.all(HBNHCommand.classes[args]).items():
+                print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)
