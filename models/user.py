@@ -4,7 +4,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models import storage_type
+# from models import storage_type
 from os import getenv
 
 
