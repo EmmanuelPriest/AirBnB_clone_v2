@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
 
+''' Place Module for HBNB project '''
 from models.amenity import Amenity
 from models.review import Review
 from models.base_model import BaseModel, Base
@@ -24,7 +24,7 @@ if storage_type == 'db':
 
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    ''' A place to stay '''
     __tablename__ = 'places'
     if storage_type == 'db':
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
