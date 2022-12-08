@@ -9,7 +9,6 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-import shlex
 
 
 class FileStorage:
@@ -29,22 +28,16 @@ class FileStorage:
         Return:
             returns a dictionary of __object
         """
-        dic = {}
-        if cls:
-            dictionary = self.__objects
-            for key in dictionary:
-                partition = key.replace('.', ' ')
-                partition = shlex.split(partition)
-                if (partition[0] == cls.__name__):
-                    dic[key] = self.__objects[key]
-            return (dic)
-        else:
-            return self.__objects
+        if cls is not None:
+            n_dict = {}
+            for key, value in self.__objects.items():
+                if cls == type(value):
+                    n_dict[key] = value
+            return n_dict
+        return self.__objects
 
     def new(self, obj):
-        """
-        sets __object to given obj
-
+        """sets __object to given obj
         Args:
             obj: given object
         """
@@ -53,7 +46,8 @@ class FileStorage:
             self.__objects[key] = obj
 
     def save(self):
-        """serialize the file path to JSON file path"""
+        """serialize the file path to JSON file path
+        """
         my_dict = {}
         for key, value in self.__objects.items():
             my_dict[key] = value.to_dict()
@@ -61,7 +55,8 @@ class FileStorage:
             json.dump(my_dict, f)
 
     def reload(self):
-        """serialize the file path to JSON file path"""
+        """serialize the file path to JSON file path
+        """
         try:
             with open(self.__file_path, 'r', encoding="UTF-8") as f:
                 for key, value in (json.load(f)).items():
@@ -71,11 +66,14 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """ delete an existing element"""
-        if obj:
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            del self.__objects[key]
+        """ to delete obj from __objects if it’s inside
+        """
+        if obj is not None:
+            key = obj.__class__.__name__ + '.' + obj.id
+            if key in self.__objects.keys():
+                del self.__objects[key]
+        self.save()
 
     def close(self):
-        """ calls reload()"""
+        """ Close function. """
         self.reload()
