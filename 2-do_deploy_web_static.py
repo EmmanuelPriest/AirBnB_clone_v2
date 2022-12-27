@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-# Fabric script that distributes an archive to my webservers using do_deploy()
+"""
+Fabric script that distributes an archive to my webservers using do_deploy()
+"""
 import os.path
 from fabric.api import env
 from fabric.api import put
