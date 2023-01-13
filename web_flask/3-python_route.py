@@ -31,13 +31,13 @@ def hbnb():
 
 @app.route("/c/<text>", strict_slashes=False)
 def display_c_text(text):
-    '''Display "C is cool"'''
+    '''Display "C " with the content of text'''
     text = text.replace("_", " ")
     return 'C ' + text
 
 
 @app.route("/python/<text>", strict_slashes=False)
-def display_python_text(text):
+def display_python_text(text='is cool'):
     '''Display "Python is cool"'''
     text = text.replace("_", " ")
     return 'Python ' + text
