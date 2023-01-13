@@ -17,30 +17,30 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-@app.route("/", strict_slashes=False)
+@app.route('/', strict_slashes=False)
 def hello():
     '''Display “Hello HBNB!”'''
     return 'Hello HBNB!'
 
 
-@app.route("/hbnb", strict_slashes=False)
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
     '''Display "HBNB"'''
     return 'HBNB'
 
 
-@app.route("/c/<text>", strict_slashes=False)
+@app.route('/c/<text>', strict_slashes=False)
 def display_c_text(text):
     '''Display "C " with the content of text'''
     text = text.replace("_", " ")
-    return 'C ' + text
+    return 'C %s' % text
 
 
-@app.route("/python/<text>", strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
 def display_python_text(text='is cool'):
     '''Display "Python is cool"'''
     text = text.replace("_", " ")
-    return 'Python ' + text
+    return 'Python %s' % text
 
 
 if __name__ == "__main__":
