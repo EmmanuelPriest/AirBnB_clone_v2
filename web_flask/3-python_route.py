@@ -33,14 +33,15 @@ def hbnb():
 def display_c_text(text):
     '''Display "C " with the content of text'''
     text = text.replace("_", " ")
-    return 'C %s' % text
+    return 'C ' + text
 
 
+@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def display_python_text(text='is cool'):
     '''Display "Python is cool"'''
     text = text.replace("_", " ")
-    return 'Python %s' % text
+    return 'Python ' + text
 
 
 if __name__ == "__main__":
