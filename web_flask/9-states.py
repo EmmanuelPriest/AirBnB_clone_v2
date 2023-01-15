@@ -19,8 +19,8 @@ def close_database(self):
 @app.route('/states/', strict_slashes=False)
 def states():
     '''Returns the list of all states'''
-    state = storage.all(State)
-    return render_template('9-states.html', state=state, mode='all')
+    states = storage.all(State)
+    return render_template('9-states.html', states=states, mode='all')
 
 
 @app.route('/states/<id>', strict_slashes=False)
