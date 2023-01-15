@@ -23,6 +23,7 @@ Script that starts a Flask web application:
     Use the option strict_slashes=False in the route definition
 '''
 from models import storage
+from models import *
 from flask import Flask, render_template
 
 app = Flask(__name__)
