@@ -15,8 +15,8 @@ Script that starts a Flask web application:
             LI tag: description of one State: <state.id>: <B><state.name></B>
     The option strict_slashes=False must be used in the route definition
 '''
-from flask import Flask, render_template
 from models import storage
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
