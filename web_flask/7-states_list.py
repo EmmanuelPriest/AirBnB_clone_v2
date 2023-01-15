@@ -19,20 +19,18 @@ from flask import Flask, render_template
 from models import storage
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatabase.db"
 
 
 @app.teardown_appcontext
 def close_database(error):
-    '''Closes the database'''
+    '''Closes all the sqlalchemy session in database'''
     storage.close()
 
 
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     '''Returns states sorted by name(A->Z)'''
-    states = storage.all('State').values()
+    states = storage.all('State')
     states = sorted(states, key=lambda state: state.name)
     return render_template('7-states_list.html', states=states)
 
