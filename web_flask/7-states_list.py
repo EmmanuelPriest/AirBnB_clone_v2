@@ -16,6 +16,7 @@ Script that starts a Flask web application:
     The option strict_slashes=False must be used in the route definition
 '''
 from models import storage
+from models.state import State
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -24,7 +25,7 @@ app = Flask(__name__)
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     '''Returns states sorted by name(A->Z)'''
-    states = storage.all('State')
+    states = storage.all('State').values()
     return render_template('7-states_list.html', states=states)
 
 
