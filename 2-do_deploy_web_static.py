@@ -2,7 +2,8 @@
 """
 Fabric script that distributes an archive to my webservers using do_deploy()
 """
-import os.path
+import os
+from fabric.api import *
 from fabric.api import env
 from fabric.api import put
 from fabric.api import run
@@ -19,33 +20,22 @@ def do_deploy(archive_path):
         If the file doesn't exist at archive_path or an error occurs - False.
         Otherwise - True.
     """
-    if os.path.isfile(archive_path) is False:
+    if not os.path.exists(archive_path):
         return False
-    file = archive_path.split("/")[-1]
-    name = file.split(".")[0]
 
-    if put(archive_path, "/tmp/{}".format(file)).failed is True:
+    filename = os.path.basename(archive_path)
+    filename_without_extension = os.path.splitext(filename)[0]
+    release_folder = '/data/web_static/releases/' + filename_without_extension
+    release_folder_exists = run('ls {}'.format(release_folder))
+
+    if release_folder_exists.succeeded:
         return False
-    if run("rm -rf /data/web_static/releases/{}/".
-           format(name)).failed is True:
-        return False
-    if run("mkdir -p /data/web_static/releases/{}/".
-           format(name)).failed is True:
-        return False
-    if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
-           format(file, name)).failed is True:
-        return False
-    if run("rm /tmp/{}".format(file)).failed is True:
-        return False
-    if run("mv /data/web_static/releases/{}/web_static/* "
-           "/data/web_static/releases/{}/".format(name, name)).failed is True:
-        return False
-    if run("rm -rf /data/web_static/releases/{}/web_static".
-           format(name)).failed is True:
-        return False
-    if run("rm -rf /data/web_static/current").failed is True:
-        return False
-    if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
-           format(name)).failed is True:
-        return False
+
+    put(archive_path, '/tmp/')
+    run('mkdir -p {}'.format(release_folder))
+    run('tar -xzf /tmp/{} -C {}'.format(filename, release_folder))
+    run('rm /tmp/{}'.format(filename))
+    run('rm -f /data/web_static/current')
+    run('ln -s {} /data/web_static/current'.format(release_folder))
+
     return True
