@@ -21,18 +21,18 @@ from models import storage
 app = Flask(__name__)
 
 
-@app.teardown_appcontext
-def close_database(error):
-    '''Closes all the sqlalchemy session in database'''
-    storage.close()
-
-
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     '''Returns states sorted by name(A->Z)'''
     states = storage.all('State')
     states = sorted(states, key=lambda state: state.name)
     return render_template('7-states_list.html', states=states)
+
+
+@app.teardown_appcontext
+def close_database(error):
+    '''Closes all the sqlalchemy session in database'''
+    storage.close()
 
 
 if __name__ == "__main__":
